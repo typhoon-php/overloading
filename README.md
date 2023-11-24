@@ -24,6 +24,8 @@ After this you will be able to call `handle` with any arguments and reach overlo
 when their signature matches.
 
 ```php
+use Typhoon\Overloading\Overload;
+
 final class WhateverHandler
 {
     public function handle(mixed ...$args): string
