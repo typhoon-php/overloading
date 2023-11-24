@@ -2,6 +2,7 @@
 
 The missing method overloading feature for PHP.
 
+[![PHP Version Require](http://poser.pugx.org/typhoon/overloading/require/php)](https://packagist.org/packages/typhoon/overloading)
 [![Latest Stable Version](https://poser.pugx.org/typhoon/overloading/v/stable.png)](https://packagist.org/packages/typhoon/overloading)
 [![Total Downloads](https://poser.pugx.org/typhoon/overloading/downloads.png)](https://packagist.org/packages/typhoon/overloading)
 [![psalm-level](https://shepherd.dev/github/typhoon-php/overloading/level.svg)](https://shepherd.dev/github/typhoon-php/overloading)
