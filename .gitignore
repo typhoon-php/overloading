@@ -1,0 +1,6 @@
+/var/
+/vendor/
+/.php-cs-fixer.php
+/infection.json5
+/phpunit.xml
+/psalm.xml

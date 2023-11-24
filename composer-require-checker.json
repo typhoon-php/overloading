@@ -1,0 +1,6 @@
+{
+    "symbol-whitelist": [
+        "opcache_compile_file",
+        "opcache_invalidate"
+    ]
+}
