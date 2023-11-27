@@ -29,15 +29,16 @@ final class Overload
             throw new \BadMethodCallException(__METHOD__ . '() must be called from a class method.');
         }
 
-        $class = $trace['class'];
         /** @var non-empty-string */
         $method = $trace['function'];
+        $object = $trace['object'] ?? null;
+        $class = self::resolveClass($trace['class'], $method, $object);
 
         /** @psalm-suppress PossiblyNullFunctionCall, PossiblyNullReference */
         return self::$resolverCache
             ->get($class, $method, static function () use ($class, $method): string {
                 $reflectionMethod = new \ReflectionMethod($class, $method);
-                $candidates = CandidatesFinder::findCandidates($reflectionMethod);
+                $candidates = CandidatesFinder::findCandidates($reflectionMethod, $class);
 
                 if ($candidates === []) {
                     throw new \BadMethodCallException(sprintf('No overloading methods for %s::%s().', $class, $method));
@@ -45,7 +46,7 @@ final class Overload
 
                 return CodeGenerator::generateResolver($reflectionMethod, $candidates);
             })
-            ->bindTo($trace['object'] ?? null, $class)
+            ->bindTo($object, $class)
             ->__invoke($trace['args'] ?? []);
     }
 
@@ -62,5 +63,27 @@ final class Overload
     public static function clearCache(): void
     {
         self::$resolverCache?->clear();
+    }
+
+    /**
+     * @param class-string $class
+     * @param non-empty-string $method
+     * @return class-string
+     */
+    private static function resolveClass(string $class, string $method, ?object $object): string
+    {
+        if ($object === null) {
+            return $class;
+        }
+
+        if ($object::class === $class) {
+            return $class;
+        }
+
+        if ((new \ReflectionMethod($class, $method))->isPrivate()) {
+            return $class;
+        }
+
+        return $object::class;
     }
 }

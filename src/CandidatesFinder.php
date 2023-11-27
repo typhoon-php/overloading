@@ -17,16 +17,17 @@ final class CandidatesFinder
     private function __construct() {}
 
     /**
+     * @param class-string $class
      * @return list<\ReflectionMethod>
      */
-    public static function findCandidates(\ReflectionMethod $method): array
+    public static function findCandidates(\ReflectionMethod $method, string $class): array
     {
         $static = $method->isStatic();
         $private = $method->isPrivate();
         $protected = $method->isProtected();
         $candidates = [];
 
-        foreach (self::findCandidatesByAttribute($method) as $candidate) {
+        foreach (self::findCandidatesByAttribute($method, $class) as $candidate) {
             if ($candidate->isStatic() !== $static) {
                 throw new \LogicException(sprintf(
                     '%s %s::%s() is not a valid overloading method for %s %s::%s().',
@@ -58,11 +59,12 @@ final class CandidatesFinder
     }
 
     /**
+     * @param class-string $class
      * @return \Generator<int, \ReflectionMethod>
      */
-    private static function findCandidatesByAttribute(\ReflectionMethod $method): \Generator
+    private static function findCandidatesByAttribute(\ReflectionMethod $method, string $class): \Generator
     {
-        foreach ($method->getDeclaringClass()->getMethods() as $candidate) {
+        foreach ((new \ReflectionClass($class))->getMethods() as $candidate) {
             if ($candidate->name === $method->name) {
                 continue;
             }
@@ -70,6 +72,8 @@ final class CandidatesFinder
             foreach ($candidate->getAttributes(Overload::class) as $attribute) {
                 if ($attribute->newInstance()->name === $method->name) {
                     yield $candidate;
+
+                    continue 2;
                 }
             }
         }

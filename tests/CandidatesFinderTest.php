@@ -20,7 +20,7 @@ final class CandidatesFinderTest extends TestCase
         };
         $method = new \ReflectionMethod($object, 'a');
 
-        $candidates = CandidatesFinder::findCandidates($method);
+        $candidates = CandidatesFinder::findCandidates($method, $object::class);
 
         self::assertSame([], $candidates);
     }
@@ -35,7 +35,7 @@ final class CandidatesFinderTest extends TestCase
         };
         $method = new \ReflectionMethod($object, 'a');
 
-        $candidates = CandidatesFinder::findCandidates($method);
+        $candidates = CandidatesFinder::findCandidates($method, $object::class);
 
         self::assertSame([], $candidates);
     }
@@ -53,7 +53,7 @@ final class CandidatesFinderTest extends TestCase
         };
         $method = new \ReflectionMethod($object, 'a');
 
-        $candidates = CandidatesFinder::findCandidates($method);
+        $candidates = CandidatesFinder::findCandidates($method, $object::class);
 
         self::assertEquals(
             [new \ReflectionMethod($object, 'b'), new \ReflectionMethod($object, 'c')],
@@ -76,7 +76,7 @@ final class CandidatesFinderTest extends TestCase
             $object::class,
         )));
 
-        CandidatesFinder::findCandidates($method);
+        CandidatesFinder::findCandidates($method, $object::class);
     }
 
     public function testItThrowsIfNonStaticOverloadsStatic(): void
@@ -94,7 +94,7 @@ final class CandidatesFinderTest extends TestCase
             $object::class,
         )));
 
-        CandidatesFinder::findCandidates($method);
+        CandidatesFinder::findCandidates($method, $object::class);
     }
 
     /**
@@ -129,6 +129,6 @@ final class CandidatesFinderTest extends TestCase
             $aVisibility,
         )));
 
-        CandidatesFinder::findCandidates($method);
+        CandidatesFinder::findCandidates($method, $object::class);
     }
 }
