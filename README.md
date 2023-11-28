@@ -1,4 +1,4 @@
-# Typhoon Overloard
+# Typhoon Overloading
 
 The missing method overloading feature for PHP.
 
